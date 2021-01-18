@@ -5,7 +5,7 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class RecipeListActivity extends AppCompatActivity {
+public class RecipeListActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
