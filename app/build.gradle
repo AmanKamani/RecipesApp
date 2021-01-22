@@ -29,9 +29,10 @@ android {
 }
 
 dependencies {
-
     def retrofitVersion = "2.9.0"
     def lifecycle_version = "2.2.0"
+    def glideVersion = "4.11.0"
+    def cardView_Version = "1.0.0"
 
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.2.1'
@@ -49,4 +50,10 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel:$lifecycle_version"
     // LiveData
     implementation "androidx.lifecycle:lifecycle-livedata:$lifecycle_version"
+
+    // CardView
+    implementation "androidx.cardview:cardview:$cardView_Version"
+
+    // Glide
+    implementation "com.github.bumptech.glide:glide:$glideVersion"
 }
