@@ -3,24 +3,45 @@ package jb.prodution.recipesapp;
 import android.os.Bundle;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+import jb.prodution.recipesapp.adapters.OnRecipeListener;
+import jb.prodution.recipesapp.adapters.RecipeRecyclerAdapter;
 import jb.prodution.recipesapp.models.Recipe;
 import jb.prodution.recipesapp.viewmodels.RecipeListViewModel;
 
-public class RecipeListActivity extends BaseActivity {
+public class RecipeListActivity extends BaseActivity implements OnRecipeListener {
 
     private RecipeListViewModel viewModel;
+    private RecyclerView mRecyclerView;
+    private RecipeRecyclerAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_list);
 
+        mRecyclerView = findViewById(R.id.recipe_list);
+
         viewModel = new ViewModelProvider(this).get(RecipeListViewModel.class);
 
+        initRecyclerView();
         subscribeObservers();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        searchRecipeApi("apple","vegetarian",0);
+    }
+
+    private void initRecyclerView(){
+        mAdapter = new RecipeRecyclerAdapter(this);
+        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
     private void searchRecipeApi(String query, String diet, int skipRecords){
@@ -38,7 +59,19 @@ public class RecipeListActivity extends BaseActivity {
 //        or can write the above observe with the JAVA lambda function
 
         viewModel.getRecipes().observe(this, recipes -> {
-
+            if(recipes != null){
+                mAdapter.setRecipes(recipes);
+            }
         });
+    }
+
+    @Override
+    public void onRecipeClick(int position) {
+
+    }
+
+    @Override
+    public void onCategoryClick(String Category) {
+
     }
 }
