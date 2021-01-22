@@ -1,5 +1,7 @@
 package jb.prodution.recipesapp.repositories;
 
+import android.text.TextUtils;
+
 import androidx.lifecycle.LiveData;
 
 import java.util.List;
@@ -26,5 +28,14 @@ public class RecipeRepository {
 
     public LiveData<List<Recipe>> getRecipes() {
         return recipeApiClient.getRecipes();
+    }
+
+    public void searchRecipeApi(String query, String diet, int skipRecords){
+        if(TextUtils.isEmpty(diet))
+            diet = "vegetarian";
+        if(skipRecords < 0)
+            skipRecords = 0;
+
+        recipeApiClient.searchRecipesApi(query, diet, skipRecords);
     }
 }

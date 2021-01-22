@@ -23,6 +23,10 @@ public class RecipeListActivity extends BaseActivity {
         subscribeObservers();
     }
 
+    private void searchRecipeApi(String query, String diet, int skipRecords){
+        viewModel.searchRecipeApi(query, diet, skipRecords);
+    }
+
     private void subscribeObservers(){
 //        viewModel.getRecipes().observe(this, new Observer<List<Recipe>>() {
 //            @Override
