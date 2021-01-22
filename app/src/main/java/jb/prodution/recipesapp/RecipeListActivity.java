@@ -1,6 +1,8 @@
 package jb.prodution.recipesapp;
 
 import android.os.Bundle;
+
+import androidx.appcompat.widget.SearchView;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -30,12 +32,8 @@ public class RecipeListActivity extends BaseActivity implements OnRecipeListener
 
         initRecyclerView();
         subscribeObservers();
-    }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        searchRecipeApi("apple","vegetarian",0);
+        initSearchView();
     }
 
     private void initRecyclerView(){
@@ -44,8 +42,20 @@ public class RecipeListActivity extends BaseActivity implements OnRecipeListener
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
-    private void searchRecipeApi(String query, String diet, int skipRecords){
-        viewModel.searchRecipeApi(query, diet, skipRecords);
+    private void initSearchView(){
+        final SearchView searchView = findViewById(R.id.search_view);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                viewModel.searchRecipeApi(query, "vegetarian", 0);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
     }
 
     private void subscribeObservers(){
@@ -57,7 +67,6 @@ public class RecipeListActivity extends BaseActivity implements OnRecipeListener
 //        });
 
 //        or can write the above observe with the JAVA lambda function
-
         viewModel.getRecipes().observe(this, recipes -> {
             if(recipes != null){
                 mAdapter.setRecipes(recipes);
