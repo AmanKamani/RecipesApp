@@ -10,12 +10,12 @@ import retrofit2.http.Query;
 public interface RecipeApi {
 
     // SEARCH
-    @GET("recipes/complexSearch")
+    @GET("recipes/complexSearch?addRecipeInformation=true&fillIngredients=false&addRecipeNutrition=false")
     Call<RecipeSearchResponse> searchRecipe(
-            @Query("apiKey") String key, // ?
-            @Query("query") String query,  // &
-            @Query("diet") String diet,  // &
-            @Query("offset") String skipRecords // &
+            @Query("apiKey") String key,
+            @Query("query") String query,
+            @Query("diet") String diet,
+            @Query("offset") String skipRecords
     );
 
     // GET SPECIFIC RECIPE

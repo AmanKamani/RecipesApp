@@ -9,16 +9,20 @@ import jb.prodution.recipesapp.models.Ingredient;
 
 public class RecipeResponse{
 
-    private String id;
+    private int id;
     private String title;
     private String image;
     private String sourceName;
-    private int readyInMinutes;
+    private int servings;
+    private float pricePerServing;
+    @SerializedName("readyInMinutes")
+    @Expose()
+    private int prepareTime;
     @SerializedName("extendedIngredients")
     @Expose()
-    private List<Ingredient> ingredients;
+    private List<Ingredient> ingredientList;
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
@@ -34,23 +38,33 @@ public class RecipeResponse{
         return sourceName;
     }
 
-    public int getReadyInMinutes() {
-        return readyInMinutes;
+    public int getServings() {
+        return servings;
     }
 
-    public List<Ingredient> getIngredients() {
-        return ingredients;
+    public float getPricePerServing() {
+        return pricePerServing;
+    }
+
+    public int getPrepareTime() {
+        return prepareTime;
+    }
+
+    public List<Ingredient> getIngredientList() {
+        return ingredientList;
     }
 
     @Override
     public String toString() {
         return "RecipeResponse{" +
-                "id='" + id + '\'' +
+                "id=" + id +
                 ", title='" + title + '\'' +
                 ", image='" + image + '\'' +
                 ", sourceName='" + sourceName + '\'' +
-                ", readyInMinutes=" + readyInMinutes +
-                ", ingredients=" + ingredients +
+                ", servings=" + servings +
+                ", pricePerServing=" + pricePerServing +
+                ", prepareTime=" + prepareTime +
+                ", ingredientList=" + ingredientList +
                 '}';
     }
 }

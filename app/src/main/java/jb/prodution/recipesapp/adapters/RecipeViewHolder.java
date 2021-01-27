@@ -11,7 +11,7 @@ import jb.prodution.recipesapp.R;
 
 public class RecipeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-    TextView title;
+    TextView title, source, time, price, people;
     AppCompatImageView image;
     OnRecipeListener onRecipeListener;
 
@@ -22,7 +22,10 @@ public class RecipeViewHolder extends RecyclerView.ViewHolder implements View.On
 
         title = itemView.findViewById(R.id.recipe_title);
         image = itemView.findViewById(R.id.recipe_image);
-
+        source = itemView.findViewById(R.id.recipe_source);
+        time = itemView.findViewById(R.id.recipe_prepare_time);
+        price = itemView.findViewById(R.id.recipe_price);
+        people = itemView.findViewById(R.id.recipe_people);
         itemView.setOnClickListener(this);
     }
 

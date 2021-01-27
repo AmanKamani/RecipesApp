@@ -43,8 +43,12 @@ public class RecipeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 .load(mRecipes.get(position).getImage())
                 .into(((RecipeViewHolder)holder).image);
 
-        ((RecipeViewHolder)holder).title.setText(mRecipes.get(position).getTitle());
-        ((RecipeViewHolder)holder).title.setText(mRecipes.get(position).getTitle());
+        RecipeViewHolder recipeViewHolder = (RecipeViewHolder)holder;
+        recipeViewHolder.title.setText(mRecipes.get(position).getTitle());
+        recipeViewHolder.source.setText(mRecipes.get(position).getSourceName());
+        recipeViewHolder.time.setText(String.format("%d min", mRecipes.get(position).getPrepareTime()));
+        recipeViewHolder.price.setText(String.valueOf(mRecipes.get(position).getPricePerServing()));
+        recipeViewHolder.people.setText(String.valueOf(mRecipes.get(position).getServings()));
     }
 
     @Override
