@@ -69,7 +69,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="@dimen/highlighter_padding"
-                        android:drawablePadding="@dimen/highlighter_padding"
                         android:textSize="@dimen/highlighter_text_size"
                         app:drawableStartCompat="@drawable/ic_dollar" />
 
