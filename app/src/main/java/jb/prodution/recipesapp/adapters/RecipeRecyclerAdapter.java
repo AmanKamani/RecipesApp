@@ -1,5 +1,7 @@
 package jb.prodution.recipesapp.adapters;
 
+import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,14 +14,17 @@ import com.bumptech.glide.request.RequestOptions;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import jb.prodution.recipesapp.R;
 import jb.prodution.recipesapp.models.Recipe;
+import jb.prodution.recipesapp.util.Constants;
 
 public class RecipeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final int RECIPE_TYPE = 1;
     private static final int LOADING_TYPE = 2;
+    private static final int CATEGORY_TYPE = 3;
 
     private static final String LOADING_STRING = "LOADING...";
 
@@ -41,6 +46,9 @@ public class RecipeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             case LOADING_TYPE:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_loading_list_item,parent, false);
                 return new LoadingViewHolder(view);
+            case CATEGORY_TYPE:
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_category_list_item, parent, false);
+                return new CategoryViewHolder(view, mOnRecipeListener);
             default:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_recipe_list_item, parent, false);
                 return new RecipeViewHolder(view, mOnRecipeListener);
@@ -68,8 +76,20 @@ public class RecipeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             recipeViewHolder.price.setText(String.valueOf(mRecipes.get(position).getPricePerServing()));
             recipeViewHolder.people.setText(String.valueOf(mRecipes.get(position).getServings()));
         }
-        else if(itemViewType == LOADING_TYPE){
+        else if(itemViewType == CATEGORY_TYPE){
+            CategoryViewHolder categoryViewHolder = (CategoryViewHolder)holder;
 
+            Uri path = Uri.parse("android.resource://"+holder.itemView.getContext().getPackageName()+"/drawable/"+mRecipes.get(position).getImage());
+
+            RequestOptions options = new RequestOptions()
+                    .placeholder(R.drawable.ic_launcher_background);
+
+            Glide.with(holder.itemView.getContext())
+                    .setDefaultRequestOptions(options)
+                    .load(path)
+                    .into(categoryViewHolder.image);
+
+            categoryViewHolder.title.setText(mRecipes.get(position).getTitle());
         }
     }
 
@@ -77,6 +97,8 @@ public class RecipeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     public int getItemViewType(int position) {
         if(mRecipes.get(position).getTitle().equals(LOADING_STRING))
             return LOADING_TYPE;
+        else if(mRecipes.get(position).getPrepareTime() == -1)
+            return CATEGORY_TYPE;
         else
             return RECIPE_TYPE;
     }
@@ -96,6 +118,18 @@ public class RecipeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             if(mRecipes.get(mRecipes.size()-1).getTitle().equals(LOADING_STRING))
                 return true;
         return false;
+    }
+
+    public void displaySearchCategories(){
+        mRecipes = new ArrayList<>();
+        for(Map.Entry<String,String> entry : Constants.DEFAULT_SEARCH_CATEGORY_ITEM.entrySet()){
+            Recipe recipe = new Recipe();
+            recipe.setTitle(entry.getKey());
+            recipe.setImage(entry.getValue());
+            recipe.setPrepareTime(-1);
+            mRecipes.add(recipe);
+        }
+        notifyDataSetChanged();
     }
 
     @Override

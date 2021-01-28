@@ -3,16 +3,12 @@ package jb.prodution.recipesapp;
 import android.os.Bundle;
 
 import androidx.appcompat.widget.SearchView;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.List;
-
 import jb.prodution.recipesapp.adapters.OnRecipeListener;
 import jb.prodution.recipesapp.adapters.RecipeRecyclerAdapter;
-import jb.prodution.recipesapp.models.Recipe;
 import jb.prodution.recipesapp.viewmodels.RecipeListViewModel;
 
 public class RecipeListActivity extends BaseActivity implements OnRecipeListener {
@@ -32,8 +28,8 @@ public class RecipeListActivity extends BaseActivity implements OnRecipeListener
 
         initRecyclerView();
         subscribeObservers();
-
         initSearchView();
+        displaySearchCategories();
     }
 
     private void initRecyclerView(){
@@ -75,6 +71,10 @@ public class RecipeListActivity extends BaseActivity implements OnRecipeListener
         });
     }
 
+    private void displaySearchCategories(){
+        mAdapter.displaySearchCategories();
+    }
+
     @Override
     public void onRecipeClick(int position) {
 
@@ -82,6 +82,7 @@ public class RecipeListActivity extends BaseActivity implements OnRecipeListener
 
     @Override
     public void onCategoryClick(String Category) {
-
+        mAdapter.displayLoading();
+        viewModel.searchRecipeApi(Category,"vegetarian",0);
     }
 }
