@@ -1,6 +1,7 @@
 package jb.prodution.recipesapp;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.appcompat.widget.SearchView;
 import androidx.lifecycle.ViewModelProvider;
@@ -29,7 +30,8 @@ public class RecipeListActivity extends BaseActivity implements OnRecipeListener
         initRecyclerView();
         subscribeObservers();
         initSearchView();
-        displaySearchCategories();
+        if(!viewModel.isShowingRecipes())
+            displaySearchCategories();
     }
 
     private void initRecyclerView(){
@@ -65,13 +67,14 @@ public class RecipeListActivity extends BaseActivity implements OnRecipeListener
 
 //        or can write the above observe with the JAVA lambda function
         viewModel.getRecipes().observe(this, recipes -> {
-            if(recipes != null){
+            if(viewModel.isShowingRecipes() && recipes != null){
                 mAdapter.setRecipes(recipes);
             }
         });
     }
 
     private void displaySearchCategories(){
+        viewModel.setShowingRecipes(false);
         mAdapter.displaySearchCategories();
     }
 
@@ -84,5 +87,12 @@ public class RecipeListActivity extends BaseActivity implements OnRecipeListener
     public void onCategoryClick(String Category) {
         mAdapter.displayLoading();
         viewModel.searchRecipeApi(Category,"vegetarian",0);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(viewModel.isShowingRecipes())
+            displaySearchCategories();
+        else super.onBackPressed();
     }
 }

@@ -13,8 +13,10 @@ import jb.prodution.recipesapp.repositories.RecipeRepository;
 public class RecipeListViewModel extends ViewModel {
 
     private RecipeRepository recipeRepository;
+    private boolean isShowingRecipes;
 
     public RecipeListViewModel(){
+        isShowingRecipes = false;
         recipeRepository = RecipeRepository.getInstance();
     }
 
@@ -23,6 +25,15 @@ public class RecipeListViewModel extends ViewModel {
     }
 
     public void searchRecipeApi(String query, String diet, int skipRecords){
+        isShowingRecipes = true;
         recipeRepository.searchRecipeApi(query, diet, skipRecords);
+    }
+
+    public void setShowingRecipes(boolean showRecipes){
+        isShowingRecipes = showRecipes;
+    }
+
+    public boolean isShowingRecipes() {
+        return isShowingRecipes;
     }
 }
