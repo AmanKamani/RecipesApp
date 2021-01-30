@@ -2,8 +2,12 @@ package jb.prodution.recipesapp;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -33,6 +37,8 @@ public class RecipeListActivity extends BaseActivity implements OnRecipeListener
         initSearchView();
         if(!viewModel.isShowingRecipes())
             displaySearchCategories();
+
+        setSupportActionBar(findViewById(R.id.toolbar));
     }
 
     private void initRecyclerView(){
@@ -104,5 +110,18 @@ public class RecipeListActivity extends BaseActivity implements OnRecipeListener
            super.onBackPressed();
         else
             displaySearchCategories();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if(item.getItemId() == R.id.action_categories)
+            displaySearchCategories();
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.recipe_search_menu, menu);;
+        return super.onCreateOptionsMenu(menu);
     }
 }
