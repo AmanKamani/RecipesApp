@@ -9,6 +9,7 @@ import java.util.List;
 
 import jb.prodution.recipesapp.models.Recipe;
 import jb.prodution.recipesapp.requests.RecipeApiClient;
+import jb.prodution.recipesapp.requests.responses.RecipeResponse;
 
 // It is a Data hub as it is connected with webservice(network) or database
 // Fetching data from WebService(Network - API)
@@ -47,6 +48,14 @@ public class RecipeRepository {
     public void searchNextRecords(){
         int recordsToSkip = recipeApiClient.getRecordsToSkip();
         searchRecipeApi(mQuery, mDiet, recordsToSkip);
+    }
+
+    public LiveData<RecipeResponse> getRecipeResponse(){
+        return recipeApiClient.getRecipeResponse();
+    }
+
+    public void searchRecipeById(String recipeId){
+        recipeApiClient.searchRecipeById(recipeId);
     }
 
     public void cancelRequest(){

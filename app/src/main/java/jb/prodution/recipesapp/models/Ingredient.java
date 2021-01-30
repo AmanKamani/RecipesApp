@@ -3,8 +3,11 @@ package jb.prodution.recipesapp.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Ingredient implements Parcelable {
 
+    @SerializedName("originalString")
     private String name;
 
     public Ingredient(String name) {

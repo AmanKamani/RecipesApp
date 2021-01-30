@@ -1,5 +1,6 @@
 package jb.prodution.recipesapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -107,7 +108,9 @@ public class RecipeListActivity extends BaseActivity implements OnRecipeListener
 
     @Override
     public void onRecipeClick(int position) {
-
+        Intent intent = new Intent(this, RecipeActivity.class);
+        intent.putExtra("recipe",mAdapter.getSelectedRecipe(position));
+        startActivity(intent);
     }
 
     @Override
@@ -133,7 +136,7 @@ public class RecipeListActivity extends BaseActivity implements OnRecipeListener
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.recipe_search_menu, menu);;
+        getMenuInflater().inflate(R.menu.recipe_search_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 }
