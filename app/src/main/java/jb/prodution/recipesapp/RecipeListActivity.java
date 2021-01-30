@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import jb.prodution.recipesapp.adapters.OnRecipeListener;
 import jb.prodution.recipesapp.adapters.RecipeRecyclerAdapter;
+import jb.prodution.recipesapp.util.VerticalSpacingItemDecorator;
 import jb.prodution.recipesapp.viewmodels.RecipeListViewModel;
 
 public class RecipeListActivity extends BaseActivity implements OnRecipeListener {
@@ -37,6 +38,10 @@ public class RecipeListActivity extends BaseActivity implements OnRecipeListener
     private void initRecyclerView(){
         mAdapter = new RecipeRecyclerAdapter(this);
         mRecyclerView.setAdapter(mAdapter);
+
+        VerticalSpacingItemDecorator itemDecorator = new VerticalSpacingItemDecorator(30);
+        mRecyclerView.addItemDecoration(itemDecorator);
+
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
