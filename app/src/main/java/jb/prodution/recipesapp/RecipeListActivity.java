@@ -50,6 +50,7 @@ public class RecipeListActivity extends BaseActivity implements OnRecipeListener
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                searchView.clearFocus(); // clear focus so the back navigation works properly.
                 mAdapter.displayLoading();
                 viewModel.searchRecipeApi(query.trim(), "vegetarian", 0);
                 return false;
