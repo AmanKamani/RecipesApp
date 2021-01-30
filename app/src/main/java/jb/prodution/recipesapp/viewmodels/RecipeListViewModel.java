@@ -14,9 +14,11 @@ public class RecipeListViewModel extends ViewModel {
 
     private RecipeRepository recipeRepository;
     private boolean isShowingRecipes;
+    private boolean isPerformingQuery;
 
     public RecipeListViewModel(){
         isShowingRecipes = false;
+        isPerformingQuery = false;
         recipeRepository = RecipeRepository.getInstance();
     }
 
@@ -26,6 +28,7 @@ public class RecipeListViewModel extends ViewModel {
 
     public void searchRecipeApi(String query, String diet, int skipRecords){
         isShowingRecipes = true;
+        isPerformingQuery = true;
         recipeRepository.searchRecipeApi(query, diet, skipRecords);
     }
 
@@ -37,13 +40,26 @@ public class RecipeListViewModel extends ViewModel {
         return isShowingRecipes;
     }
 
+    public boolean isPerformingQuery(){
+        return isPerformingQuery;
+    }
+
+    public void setPerformingQuery(boolean isPerformingQuery) {
+        this.isPerformingQuery = isPerformingQuery;
+    }
+
     /* If the recipe category is on the screen then only exit from the app
         So return true
         else return false
      */
     public boolean shouldExit(){
+        if(isPerformingQuery) {
+            recipeRepository.cancelRequest();
+            return false;
+        }
         if(isShowingRecipes)
             return false;
+
         return true;
     }
 }

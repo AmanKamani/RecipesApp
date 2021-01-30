@@ -120,8 +120,11 @@ public class RecipeApiClient {
         }
 
         private void cancelRequest(){
-            Log.e(TAG,"Canceling request");
             cancelRequest = true;
         }
+    }
+
+    public void cancelRequest(){
+        retrieveRecipesRunnable.cancelRequest();
     }
 }

@@ -38,4 +38,8 @@ public class RecipeRepository {
 
         recipeApiClient.searchRecipesApi(query, diet, skipRecords);
     }
+
+    public void cancelRequest(){
+        recipeApiClient.cancelRequest();
+    }
 }

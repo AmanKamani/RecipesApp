@@ -73,6 +73,7 @@ public class RecipeListActivity extends BaseActivity implements OnRecipeListener
 //        or can write the above observe with the JAVA lambda function
         viewModel.getRecipes().observe(this, recipes -> {
             if(viewModel.isShowingRecipes() && recipes != null){
+                viewModel.setPerformingQuery(false);
                 mAdapter.setRecipes(recipes);
             }
         });
@@ -80,6 +81,7 @@ public class RecipeListActivity extends BaseActivity implements OnRecipeListener
 
     private void displaySearchCategories(){
         viewModel.setShowingRecipes(false);
+        viewModel.setPerformingQuery(false);
         mAdapter.displaySearchCategories();
     }
 
@@ -96,6 +98,7 @@ public class RecipeListActivity extends BaseActivity implements OnRecipeListener
 
     @Override
     public void onBackPressed() {
+        Log.e("$$$","back pressed");
         if(viewModel.shouldExit())
            super.onBackPressed();
         else
