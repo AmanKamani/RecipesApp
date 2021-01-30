@@ -96,8 +96,9 @@ public class RecipeListActivity extends BaseActivity implements OnRecipeListener
 
     @Override
     public void onBackPressed() {
-        if(viewModel.isShowingRecipes())
+        if(viewModel.shouldExit())
+           super.onBackPressed();
+        else
             displaySearchCategories();
-        else super.onBackPressed();
     }
 }

@@ -36,4 +36,14 @@ public class RecipeListViewModel extends ViewModel {
     public boolean isShowingRecipes() {
         return isShowingRecipes;
     }
+
+    /* If the recipe category is on the screen then only exit from the app
+        So return true
+        else return false
+     */
+    public boolean shouldExit(){
+        if(isShowingRecipes)
+            return false;
+        return true;
+    }
 }
