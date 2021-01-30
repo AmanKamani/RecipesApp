@@ -29,6 +29,7 @@ public class RecipeApiClient {
     private static MutableLiveData<List<Recipe>> recipes;
     private RetrieveRecipesRunnable retrieveRecipesRunnable;
 
+    private int recordsToSkip;
 
     private RecipeApiClient(){
         recipes = new MutableLiveData<>();
@@ -40,6 +41,10 @@ public class RecipeApiClient {
         return instance;
     }
 
+    public int getRecordsToSkip(){
+        return recordsToSkip;
+    }
+
     public LiveData<List<Recipe>> getRecipes() {
         return recipes;
     }
@@ -47,6 +52,7 @@ public class RecipeApiClient {
     public void searchRecipesApi(String query, String diet, int skipRecords){
         if(retrieveRecipesRunnable != null)
             retrieveRecipesRunnable = null;
+
         retrieveRecipesRunnable = new RetrieveRecipesRunnable(query, diet, skipRecords);
 
         final Future handler = AppExecutors.getInstance().networkIO().submit(retrieveRecipesRunnable);
@@ -84,7 +90,11 @@ public class RecipeApiClient {
                 if(cancelRequest)
                     return;
                 else if(response.code() == 200){
-                    List<Recipe> list = new ArrayList<>(((RecipeSearchResponse)response.body()).getRecipes());
+                    RecipeSearchResponse recipeSearchResponse = (RecipeSearchResponse)response.body();
+
+                    recordsToSkip = recipeSearchResponse.getCount()+recipeSearchResponse.getOffset();
+
+                    List<Recipe> list = new ArrayList<>(recipeSearchResponse.getRecipes());
 
                     /*
                     postValue() is used in the background thread means post this to the main thread

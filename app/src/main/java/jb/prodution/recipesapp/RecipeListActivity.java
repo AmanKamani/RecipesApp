@@ -49,6 +49,19 @@ public class RecipeListActivity extends BaseActivity implements OnRecipeListener
         mRecyclerView.addItemDecoration(itemDecorator);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+
+                // if recyclerview can not be scrolled vertically then it is time to load more data
+                if(!mRecyclerView.canScrollVertically(1)){
+                    // load more results
+                    viewModel.searchNextRecords();
+                }
+            }
+        });
     }
 
     private void initSearchView(){
@@ -105,7 +118,6 @@ public class RecipeListActivity extends BaseActivity implements OnRecipeListener
 
     @Override
     public void onBackPressed() {
-        Log.e("$$$","back pressed");
         if(viewModel.shouldExit())
            super.onBackPressed();
         else

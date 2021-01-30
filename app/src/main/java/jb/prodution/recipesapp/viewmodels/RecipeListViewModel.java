@@ -1,7 +1,8 @@
 package jb.prodution.recipesapp.viewmodels;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import java.util.List;
@@ -30,6 +31,12 @@ public class RecipeListViewModel extends ViewModel {
         isShowingRecipes = true;
         isPerformingQuery = true;
         recipeRepository.searchRecipeApi(query, diet, skipRecords);
+    }
+
+    public void searchNextRecords(){
+        if(!isPerformingQuery && isShowingRecipes){
+            recipeRepository.searchNextRecords();
+        }
     }
 
     public void setShowingRecipes(boolean showRecipes){

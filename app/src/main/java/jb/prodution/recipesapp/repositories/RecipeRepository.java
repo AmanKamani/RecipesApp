@@ -1,6 +1,7 @@
 package jb.prodution.recipesapp.repositories;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
@@ -15,6 +16,8 @@ public class RecipeRepository {
 
     private static RecipeRepository instance;
     private RecipeApiClient recipeApiClient;
+    private String mDiet;
+    private String mQuery;
 
     private RecipeRepository(){
         recipeApiClient = RecipeApiClient.getInstance();
@@ -36,7 +39,14 @@ public class RecipeRepository {
         if(skipRecords < 0)
             skipRecords = 0;
 
+        mQuery = query;
+        mDiet = diet;
         recipeApiClient.searchRecipesApi(query, diet, skipRecords);
+    }
+
+    public void searchNextRecords(){
+        int recordsToSkip = recipeApiClient.getRecordsToSkip();
+        searchRecipeApi(mQuery, mDiet, recordsToSkip);
     }
 
     public void cancelRequest(){
