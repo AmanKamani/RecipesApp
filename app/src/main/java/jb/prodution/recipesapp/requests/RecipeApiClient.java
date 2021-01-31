@@ -28,12 +28,13 @@ public class RecipeApiClient {
     private String TAG = "$$$";
 
     private static RecipeApiClient instance;
-    private static MutableLiveData<List<Recipe>> recipes;
+    private MutableLiveData<List<Recipe>> recipes;
     private RetrieveRecipesRunnable retrieveRecipesRunnable;
     private int recordsToSkip;
 
-    private static MutableLiveData<RecipeResponse> recipeResponse;
+    private MutableLiveData<RecipeResponse> recipeResponse;
     private RetrieveRecipeRunnable retrieveRecipeRunnable;
+    private MutableLiveData<Boolean> mRecipeRequestTimeOut = new MutableLiveData<>();
 
     private RecipeApiClient(){
         recipes = new MutableLiveData<>();
@@ -125,7 +126,7 @@ public class RecipeApiClient {
                     recipes.postValue(null);
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.e(TAG,"exception: "+e.getMessage());
                 recipes.postValue(null);
             }
 
@@ -148,6 +149,10 @@ public class RecipeApiClient {
         return recipeResponse;
     }
 
+    public LiveData<Boolean> isRecipeRequestTimeOut(){
+        return mRecipeRequestTimeOut;
+    }
+
     public void searchRecipeById(String recipeId){
         if(retrieveRecipeRunnable != null)
             retrieveRecipeRunnable = null;
@@ -156,14 +161,15 @@ public class RecipeApiClient {
 
         final Future handler = AppExecutors.getInstance().networkIO().submit(retrieveRecipeRunnable);
 
-        AppExecutors.getInstance().networkIO().schedule((new Runnable() {
-            @Override
-            public void run() {
-                // add code to make user know that it is cancelled.
+        // below line is required otherwise it will not show the progress bar and straight away display the screen.
+        mRecipeRequestTimeOut.setValue(false);
 
-                // if the network request took more than NETWORK_TIMEOUT then it should cancel.
-                handler.cancel(true);
-            }
+        AppExecutors.getInstance().networkIO().schedule((() -> {
+            // add code to make user know that it is cancelled.
+            mRecipeRequestTimeOut.postValue(true);
+
+            // if the network request took more than NETWORK_TIMEOUT then it should cancel.
+            handler.cancel(true);
         }), NETWORK_TIMEOUT, TimeUnit.MILLISECONDS);
     }
 
@@ -191,8 +197,7 @@ public class RecipeApiClient {
                     recipeResponse.postValue(null);
                 }
             } catch (IOException e) {
-                e.printStackTrace();
-                Log.e(TAG,e.getMessage());
+                Log.e(TAG,"Exception: "+e.getMessage());
                 recipeResponse.postValue(null);
             }
         }

@@ -10,9 +10,14 @@ public class RecipeViewModel extends ViewModel {
 
     private RecipeRepository mRecipeRepository;
     private String mRecipeId;
+    private boolean mHasRetrievedRecipe;
+    private boolean mHasNetworkError;
+
 
     public RecipeViewModel(){
         mRecipeRepository = RecipeRepository.getInstance();
+        mHasRetrievedRecipe = false;
+        mHasNetworkError = false;
     }
 
     public LiveData<RecipeResponse> getRecipeResponse(){
@@ -24,7 +29,23 @@ public class RecipeViewModel extends ViewModel {
         mRecipeRepository.searchRecipeById(recipeId);
     }
 
+    public LiveData<Boolean> isRecipeRequestTimeOut(){
+        return mRecipeRepository.isRecipeRequestTimeOut();
+    }
+
     public String getRecipeId(){
         return mRecipeId;
     }
+
+    public void setRetrievedRecipe(boolean retrievedRecipe){
+        this.mHasRetrievedRecipe = retrievedRecipe;
+    }
+
+    public boolean hasRetrievedRecipe(){
+        return mHasRetrievedRecipe;
+    }
+
+    public boolean hasNetworkError(){ return mHasNetworkError; }
+
+    public void setNetworkError(boolean networkError){ this.mHasNetworkError = networkError; }
 }

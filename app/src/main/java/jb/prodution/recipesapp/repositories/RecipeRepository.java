@@ -1,7 +1,6 @@
 package jb.prodution.recipesapp.repositories;
 
 import android.text.TextUtils;
-import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
@@ -56,6 +55,10 @@ public class RecipeRepository {
 
     public void searchRecipeById(String recipeId){
         recipeApiClient.searchRecipeById(recipeId);
+    }
+
+    public LiveData<Boolean> isRecipeRequestTimeOut(){
+        return recipeApiClient.isRecipeRequestTimeOut();
     }
 
     public void cancelRequest(){

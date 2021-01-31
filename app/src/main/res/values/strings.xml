@@ -2,4 +2,6 @@
     <string name="app_name">RecipesApp</string>
     <string name="categories_title">Categories</string>
     <string name="ingredients_title">Ingredients</string>
+    <string name="recipe_error_msg1">Error retrieving recipe...</string>
+    <string name="recipe_error_msg2">Error retrieving data. Please check your network connection.</string>
 </resources>

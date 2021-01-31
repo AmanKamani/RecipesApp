@@ -1,7 +1,6 @@
 package jb.prodution.recipesapp;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -27,7 +26,7 @@ public class RecipeActivity extends BaseActivity {
     private LinearLayout mRecipeIngredientsContainer;
     private ScrollView mScrollView;
 
-    private RecipeViewModel recipeViewModel;
+    private RecipeViewModel recipeViewModel;;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,7 +49,7 @@ public class RecipeActivity extends BaseActivity {
 
     private void getIncomingIntent() {
         if (getIntent().hasExtra("recipe")) {
-            Recipe recipe = getIntent().getParcelableExtra("recipe");
+            final Recipe recipe = getIntent().getParcelableExtra("recipe");
             showProgressBar(true);
             recipeViewModel.searchRecipeById(String.valueOf(recipe.getId()));
         }
@@ -60,8 +59,7 @@ public class RecipeActivity extends BaseActivity {
 
         recipeViewModel.getRecipeResponse().observe(this, recipeResponse -> {
             if (recipeResponse != null
-                    && recipeResponse.getId() == Integer.parseInt(recipeViewModel.getRecipeId()))
-
+                    && recipeResponse.getId() == Integer.parseInt(recipeViewModel.getRecipeId())) {
                 /*
                  * Here the second condition is for displaying progressbar for the second time.
                  * Problem : first time clicking on the item, will first show the progress bar and
@@ -80,38 +78,73 @@ public class RecipeActivity extends BaseActivity {
                  * Once the new data will be stored in the viewModel then this if block will be executed and the setProperties()
                  * executes, which hides the progress bar. Till that much of time progress bar will be displayed.
                  */
-
+                recipeViewModel.setNetworkError(false);
                 setProperties(recipeResponse);
+                recipeViewModel.setRetrievedRecipe(true);
+            }
         });
+
+        recipeViewModel.isRecipeRequestTimeOut().observe(this, isTimeOut -> {
+
+                if (isTimeOut && !recipeViewModel.hasRetrievedRecipe()) {
+                    // Time out
+                    recipeViewModel.setNetworkError(true);
+                    recipeViewModel.setRetrievedRecipe(true);
+                }
+                if(recipeViewModel.hasNetworkError())
+                    displayErrorScreen();
+        });
+    }
+
+    private void displayErrorScreen(){
+        mRecipePrepareTime.setVisibility(View.INVISIBLE);
+        mRecipePrice.setVisibility(View.INVISIBLE);
+        mRecipeServings.setVisibility(View.INVISIBLE);
+
+        mRecipeTitle.setText(R.string.recipe_error_msg1);
+        Glide.with(RecipeActivity.this)
+                .load(R.drawable.ic_launcher_background)
+                .into(mRecipeImage);
+
+        TextView error = new TextView(this);
+        error.setText(R.string.recipe_error_msg2);
+        error.setTextSize(15);
+        error.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        mRecipeIngredientsContainer.addView(error);
+
+        showProgressBar(false);
+        showParent();
     }
 
     private void setProperties(RecipeResponse recipeResponse) {
 
-        final RequestOptions requestOptions = new RequestOptions()
-                .placeholder(R.drawable.ic_launcher_background);
+        if (recipeResponse != null) {
+            final RequestOptions requestOptions = new RequestOptions()
+                    .placeholder(R.drawable.ic_launcher_background);
 
-        Glide.with(RecipeActivity.this)
-                .setDefaultRequestOptions(requestOptions)
-                .load(recipeResponse.getImage())
-                .into(mRecipeImage);
+            Glide.with(RecipeActivity.this)
+                    .setDefaultRequestOptions(requestOptions)
+                    .load(recipeResponse.getImage())
+                    .into(mRecipeImage);
 
-        mRecipeTitle.setText(recipeResponse.getTitle());
-        mRecipeServings.setText(String.valueOf(recipeResponse.getServings()));
-        mRecipePrice.setText(String.format("%.2f/person", recipeResponse.getPricePerServing()));
-        mRecipePrepareTime.setText(String.format("%d min", recipeResponse.getPrepareTime()));
+            mRecipeTitle.setText(recipeResponse.getTitle());
+            mRecipeServings.setText(String.valueOf(recipeResponse.getServings()));
+            mRecipePrice.setText(String.format("%.2f/person", recipeResponse.getPricePerServing()));
+            mRecipePrepareTime.setText(String.format("%d min", recipeResponse.getPrepareTime()));
 
-        mRecipeIngredientsContainer.removeAllViews();
+            mRecipeIngredientsContainer.removeAllViews();
 
-        for (Ingredient ingredient : recipeResponse.getIngredientList()) {
-            TextView ing = new TextView(RecipeActivity.this);
-            ing.setText(ingredient.getName());
-            ing.setTextSize(15);
-            ing.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            mRecipeIngredientsContainer.addView(ing);
+            for (Ingredient ingredient : recipeResponse.getIngredientList()) {
+                TextView ing = new TextView(RecipeActivity.this);
+                ing.setText(ingredient.getName());
+                ing.setTextSize(15);
+                ing.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                mRecipeIngredientsContainer.addView(ing);
+            }
+
+            showParent();
+            showProgressBar(false);
         }
-
-        showParent();
-        showProgressBar(false);
     }
 
     private void showParent() {
