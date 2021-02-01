@@ -3,6 +3,9 @@ package jb.prodution.recipesapp.repositories;
 import android.text.TextUtils;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 
 import java.util.List;
 
@@ -19,8 +22,14 @@ public class RecipeRepository {
     private String mDiet;
     private String mQuery;
 
+    private MutableLiveData<Boolean> mIsQueryExhausted = new MutableLiveData<>();
+
+    //Mediator in the sense take the data, modify it and then pass it further.
+    private MediatorLiveData<List<Recipe>> mRecipes = new MediatorLiveData<>();
+
     private RecipeRepository(){
         recipeApiClient = RecipeApiClient.getInstance();
+        initMediators();
     }
 
     public static RecipeRepository getInstance(){
@@ -29,8 +38,39 @@ public class RecipeRepository {
         return instance;
     }
 
+    private void initMediators(){
+        LiveData<List<Recipe>> recipeListApiSource = recipeApiClient.getRecipes();
+        mRecipes.addSource(recipeListApiSource, new Observer<List<Recipe>>() {
+            @Override
+            public void onChanged(List<Recipe> recipes) {
+                if(recipes != null){
+                    mRecipes.setValue(recipes);
+                    doneQuery(recipes);
+                }
+                else{
+                    // means there is no data, it can be due to the network issue. So we can check from the local cache (database)
+                    // search database cache.
+                    doneQuery(null);
+                }
+            }
+        });
+    }
+
+    public LiveData<Boolean> isQueryExhausted(){
+        return mIsQueryExhausted;
+    }
+
+    private void doneQuery(List<Recipe> list){
+        if(list != null){
+            if(list.size() % 10 != 0) // 10 is the number of results by default retrieved from the api.
+                mIsQueryExhausted.setValue(true);
+        }
+        else
+            mIsQueryExhausted.setValue(true);
+    }
+
     public LiveData<List<Recipe>> getRecipes() {
-        return recipeApiClient.getRecipes();
+        return mRecipes;
     }
 
     public void searchRecipeApi(String query, String diet, int skipRecords){
@@ -41,6 +81,7 @@ public class RecipeRepository {
 
         mQuery = query;
         mDiet = diet;
+        mIsQueryExhausted.setValue(false);
         recipeApiClient.searchRecipesApi(query, diet, skipRecords);
     }
 
