@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ import java.util.Map;
 import jb.prodution.recipesapp.R;
 import jb.prodution.recipesapp.models.Recipe;
 import jb.prodution.recipesapp.util.Constants;
+import jb.prodution.recipesapp.util.Utility;
 
 public class RecipeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -66,12 +68,10 @@ public class RecipeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         int itemViewType = getItemViewType(position);
         if(itemViewType == RECIPE_TYPE) {
 
-            RequestOptions options = new RequestOptions()
-                    .placeholder(R.drawable.ic_launcher_background);
-
             Glide.with(holder.itemView.getContext())
-                    .setDefaultRequestOptions(options)
+                    .applyDefaultRequestOptions(Utility.getImageOptions())
                     .load(mRecipes.get(position).getImage())
+                    .transition(DrawableTransitionOptions.withCrossFade())
                     .into(((RecipeViewHolder) holder).image);
 
             RecipeViewHolder recipeViewHolder = (RecipeViewHolder) holder;
@@ -86,11 +86,8 @@ public class RecipeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
             Uri path = Uri.parse("android.resource://"+holder.itemView.getContext().getPackageName()+"/drawable/"+mRecipes.get(position).getImage());
 
-            RequestOptions options = new RequestOptions()
-                    .placeholder(R.drawable.ic_launcher_background);
-
             Glide.with(holder.itemView.getContext())
-                    .setDefaultRequestOptions(options)
+                    .setDefaultRequestOptions(Utility.getImageOptions())
                     .load(path)
                     .into(categoryViewHolder.image);
 

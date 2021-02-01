@@ -12,11 +12,14 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.transition.DrawableCrossFadeTransition;
 
 import jb.prodution.recipesapp.models.Ingredient;
 import jb.prodution.recipesapp.models.Recipe;
 import jb.prodution.recipesapp.requests.responses.RecipeResponse;
+import jb.prodution.recipesapp.util.Utility;
 import jb.prodution.recipesapp.viewmodels.RecipeViewModel;
 
 public class RecipeActivity extends BaseActivity {
@@ -119,12 +122,11 @@ public class RecipeActivity extends BaseActivity {
     private void setProperties(RecipeResponse recipeResponse) {
 
         if (recipeResponse != null) {
-            final RequestOptions requestOptions = new RequestOptions()
-                    .placeholder(R.drawable.ic_launcher_background);
 
             Glide.with(RecipeActivity.this)
-                    .setDefaultRequestOptions(requestOptions)
+                    .applyDefaultRequestOptions(Utility.getImageOptions())
                     .load(recipeResponse.getImage())
+                    .transition(DrawableTransitionOptions.withCrossFade())
                     .into(mRecipeImage);
 
             mRecipeTitle.setText(recipeResponse.getTitle());
