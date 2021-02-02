@@ -15,7 +15,6 @@ import jb.prodution.recipesapp.AppExecutors;
 import jb.prodution.recipesapp.models.Recipe;
 import jb.prodution.recipesapp.requests.responses.RecipeResponse;
 import jb.prodution.recipesapp.requests.responses.RecipeSearchResponse;
-import jb.prodution.recipesapp.util.Constants;
 import retrofit2.Call;
 import retrofit2.Response;
 

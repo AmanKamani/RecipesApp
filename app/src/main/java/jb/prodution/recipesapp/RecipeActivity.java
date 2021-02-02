@@ -13,13 +13,10 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
-import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.transition.DrawableCrossFadeTransition;
 
 import jb.prodution.recipesapp.models.Ingredient;
 import jb.prodution.recipesapp.models.Recipe;
 import jb.prodution.recipesapp.requests.responses.RecipeResponse;
-import jb.prodution.recipesapp.util.ApiKeyUtility;
 import jb.prodution.recipesapp.util.Utility;
 import jb.prodution.recipesapp.viewmodels.RecipeViewModel;
 

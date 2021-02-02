@@ -24,7 +24,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         ApiKeyUtility.setUpApiKey(this);
-        Log.e("$$$", Constants.API_KEY);
+        Log.e("$$$", "Current-API KEY - "+Constants.API_KEY);
     }
 
     @Override

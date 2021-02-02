@@ -2,13 +2,11 @@ package jb.prodution.recipesapp;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
-import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -104,7 +102,6 @@ public class RecipeListActivity extends BaseActivity implements OnRecipeListener
         });
 
         viewModel.isApiQuotaExceeded().observe(this, aBoolean -> {
-            Log.e("$$$","API - OVER? "+aBoolean);
             if(aBoolean){
                 Utility.showErrorBox(RecipeListActivity.this,viewModel);
             }
@@ -112,7 +109,6 @@ public class RecipeListActivity extends BaseActivity implements OnRecipeListener
 
         viewModel.isQueryExhausted().observe(this, aBoolean -> {
             if(aBoolean) {
-                Log.e("$$$", "query is exhausted.");
                 mAdapter.setQueryExhausted();
             }
         });
