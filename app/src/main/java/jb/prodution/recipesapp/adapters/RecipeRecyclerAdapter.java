@@ -35,6 +35,10 @@ public class RecipeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private List<Recipe> mRecipes;
     private OnRecipeListener mOnRecipeListener;
 
+    private static Recipe mExhaustedRecipe = new Recipe(){{
+        setTitle(EXHAUSTED_STRING);
+    }};
+
     public RecipeRecyclerAdapter( OnRecipeListener mOnRecipeListener) {
         this.mOnRecipeListener = mOnRecipeListener;
     }
@@ -113,9 +117,9 @@ public class RecipeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     public void setQueryExhausted(){
         hideLoading();
-        Recipe exhaustedRecipe = new Recipe();
-        exhaustedRecipe.setTitle(EXHAUSTED_STRING);
-        mRecipes.add(exhaustedRecipe);
+        if(mRecipes.size() == 0 || mRecipes.get(mRecipes.size()-1) != mExhaustedRecipe){
+            mRecipes.add(mExhaustedRecipe);
+        }
         notifyDataSetChanged();
     }
 

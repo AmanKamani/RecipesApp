@@ -97,6 +97,9 @@ public class RecipeListActivity extends BaseActivity implements OnRecipeListener
             if(viewModel.isShowingRecipes() && recipes != null){
                 viewModel.setPerformingQuery(false);
                 mAdapter.setRecipes(recipes);
+
+                if(recipes.size() == 0)
+                    mAdapter.setQueryExhausted();
             }
         });
 
