@@ -85,6 +85,10 @@ public class RecipeRepository {
         recipeApiClient.searchRecipesApi(query, diet, skipRecords);
     }
 
+    public LiveData<Boolean> isApiQuotaExceeded(){
+        return recipeApiClient.isApiQuotaExceeded();
+    }
+
     public void searchNextRecords(){
         int recordsToSkip = recipeApiClient.getRecordsToSkip();
         searchRecipeApi(mQuery, mDiet, recordsToSkip);
@@ -104,5 +108,9 @@ public class RecipeRepository {
 
     public void cancelRequest(){
         recipeApiClient.cancelRequest();
+    }
+
+    public void setIsApiQuotaExceeded(boolean isApiQuotaExceeded){
+        recipeApiClient.setIsApiQuotaExceeded(isApiQuotaExceeded);
     }
 }

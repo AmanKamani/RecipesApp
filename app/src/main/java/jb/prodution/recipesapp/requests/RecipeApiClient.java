@@ -27,6 +27,8 @@ public class RecipeApiClient {
 
     private String TAG = "$$$";
 
+    private MutableLiveData<Boolean> mIsApiQuotaExceeded = new MutableLiveData<>(false);
+
     private static RecipeApiClient instance;
     private MutableLiveData<List<Recipe>> recipes;
     private RetrieveRecipesRunnable retrieveRecipesRunnable;
@@ -47,6 +49,14 @@ public class RecipeApiClient {
         return instance;
     }
 
+    public void setIsApiQuotaExceeded(boolean isApiQuotaExceeded){
+        mIsApiQuotaExceeded.setValue(isApiQuotaExceeded);
+    }
+
+    public LiveData<Boolean> isApiQuotaExceeded(){
+        return mIsApiQuotaExceeded;
+    }
+
     // retrieve recipe list
 
     public int getRecordsToSkip(){
@@ -64,6 +74,7 @@ public class RecipeApiClient {
         retrieveRecipesRunnable = new RetrieveRecipesRunnable(query, diet, skipRecords);
 
         final Future handler = AppExecutors.getInstance().networkIO().submit(retrieveRecipesRunnable);
+
 
         AppExecutors.getInstance().networkIO().schedule(new Runnable() {
             @Override
@@ -123,7 +134,8 @@ public class RecipeApiClient {
                 else{
                     String error = response.errorBody().string();
                     Log.e(TAG, "run: "+error);
-                    recipes.postValue(null);
+//                    recipes.postValue(null);
+                    mIsApiQuotaExceeded.postValue(true);
                 }
             } catch (IOException e) {
                 Log.e(TAG,"exception: "+e.getMessage());
@@ -194,7 +206,7 @@ public class RecipeApiClient {
                 else{
                     String error = response.errorBody().string();
                     Log.e(TAG,"run: "+error);
-                    recipeResponse.postValue(null);
+                    mIsApiQuotaExceeded.postValue(true);
                 }
             } catch (IOException e) {
                 Log.e(TAG,"Exception: "+e.getMessage());

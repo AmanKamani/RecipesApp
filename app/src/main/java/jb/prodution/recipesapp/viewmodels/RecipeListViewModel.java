@@ -3,6 +3,7 @@ package jb.prodution.recipesapp.viewmodels;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import java.util.List;
@@ -37,8 +38,8 @@ public class RecipeListViewModel extends ViewModel {
         recipeRepository.searchRecipeApi(query, diet, skipRecords);
     }
 
-    public void searchNextRecords(){
-        if(!isPerformingQuery && isShowingRecipes && !isQueryExhausted().getValue()){
+    public void searchNextRecords() {
+        if (!isPerformingQuery && isShowingRecipes && !isQueryExhausted().getValue()) {
             recipeRepository.searchNextRecords();
         }
     }
@@ -72,5 +73,13 @@ public class RecipeListViewModel extends ViewModel {
             return false;
 
         return true;
+    }
+
+    public LiveData<Boolean> isApiQuotaExceeded(){
+        return recipeRepository.isApiQuotaExceeded();
+    }
+
+    public void setIsApiQuotaExceeded(boolean isApiQuotaExceeded){
+        recipeRepository.setIsApiQuotaExceeded(isApiQuotaExceeded);
     }
 }

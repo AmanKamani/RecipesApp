@@ -19,6 +19,7 @@ import com.bumptech.glide.request.transition.DrawableCrossFadeTransition;
 import jb.prodution.recipesapp.models.Ingredient;
 import jb.prodution.recipesapp.models.Recipe;
 import jb.prodution.recipesapp.requests.responses.RecipeResponse;
+import jb.prodution.recipesapp.util.ApiKeyUtility;
 import jb.prodution.recipesapp.util.Utility;
 import jb.prodution.recipesapp.viewmodels.RecipeViewModel;
 
@@ -97,6 +98,12 @@ public class RecipeActivity extends BaseActivity {
                 if(recipeViewModel.hasNetworkError())
                     displayErrorScreen();
         });
+
+        recipeViewModel.isApiQuotaExceeded().observe(this, aBoolean -> {
+            if(aBoolean){
+                Utility.showErrorBox(RecipeActivity.this, recipeViewModel);
+            }
+        });
     }
 
     private void displayErrorScreen(){
@@ -108,6 +115,8 @@ public class RecipeActivity extends BaseActivity {
         Glide.with(RecipeActivity.this)
                 .load(R.drawable.ic_launcher_background)
                 .into(mRecipeImage);
+
+        mRecipeIngredientsContainer.removeAllViews();
 
         TextView error = new TextView(this);
         error.setText(R.string.recipe_error_msg2);

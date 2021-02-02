@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import jb.prodution.recipesapp.adapters.OnRecipeListener;
 import jb.prodution.recipesapp.adapters.RecipeRecyclerAdapter;
+import jb.prodution.recipesapp.util.Utility;
 import jb.prodution.recipesapp.util.VerticalSpacingItemDecorator;
 import jb.prodution.recipesapp.viewmodels.RecipeListViewModel;
 
@@ -96,6 +97,13 @@ public class RecipeListActivity extends BaseActivity implements OnRecipeListener
             if(viewModel.isShowingRecipes() && recipes != null){
                 viewModel.setPerformingQuery(false);
                 mAdapter.setRecipes(recipes);
+            }
+        });
+
+        viewModel.isApiQuotaExceeded().observe(this, aBoolean -> {
+            Log.e("$$$","API - OVER? "+aBoolean);
+            if(aBoolean){
+                Utility.showErrorBox(RecipeListActivity.this,viewModel);
             }
         });
 

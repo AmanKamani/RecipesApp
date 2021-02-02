@@ -48,4 +48,12 @@ public class RecipeViewModel extends ViewModel {
     public boolean hasNetworkError(){ return mHasNetworkError; }
 
     public void setNetworkError(boolean networkError){ this.mHasNetworkError = networkError; }
+
+    public LiveData<Boolean> isApiQuotaExceeded(){
+        return mRecipeRepository.isApiQuotaExceeded();
+    }
+
+    public void setIsApiQuotaExceeded(boolean isApiQuotaExceeded){
+        mRecipeRepository.setIsApiQuotaExceeded(isApiQuotaExceeded);
+    }
 }
