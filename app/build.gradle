@@ -7,7 +7,7 @@ android {
     buildToolsVersion "30.0.2"
 
     defaultConfig {
-        applicationId "jb.prodution.recipesapp"
+        applicationId "jb.production.recipesapp"
         minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
